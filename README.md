@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🤖 ZENDS AI Customer Support Copilot
 
 > An end-to-end AI-powered customer support system for ZENDS Communications — a virtual telecom company.
@@ -217,3 +218,6 @@ Training notebook available here:
 ## 📄 License
 
 This project is for educational purposes.
+=======
+# zends-ai-copilot
+>>>>>>> 8553c651e7687f526b6ef77344337561427ade3a
