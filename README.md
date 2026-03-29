@@ -179,6 +179,10 @@ http://localhost:8501
 > No need to retrain — just run `streamlit run app.py` directly.
 
 ---
+## 📸 Screenshots
+
+### 🖥️ App Interface
+![ZENDS AI Customer Support Copilot](assets/app_screenshot.png)
 
 ## 💡 Features
 
@@ -214,6 +218,8 @@ Training notebook available here:
 - Project: ZENDS AI Customer Support Copilot
 
 ---
+
+
 
 ## 📄 License
 
