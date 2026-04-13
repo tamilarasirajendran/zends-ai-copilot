@@ -1,13 +1,16 @@
-import streamlit as st
-import torch
-import pickle
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from src.rag import retrieve
-from src.sentiment import analyze_sentiment
-from src.llm_response import generate_response
-from config import MODEL_PATH, LABEL_ENCODER_PATH
+# Main Streamlit App for ZENDS AI Copilot
+# Imports
+import streamlit as st # UI
+import torch # Deep Learning
+import pickle # file loading
+from transformers import AutoTokenizer, AutoModelForSequenceClassification # NLP Models
+from src.rag import retrieve # connect to othere modules
+from src.sentiment import analyze_sentiment # connect to othere modules
+from src.llm_response import generate_response # connect to othere modules
+from config import MODEL_PATH, LABEL_ENCODER_PATH # Configurations
 
 # ===== Page Config =====
+# App title + icon
 st.set_page_config(
     page_title="ZENDS AI Copilot",
     page_icon="🤖",
@@ -15,6 +18,7 @@ st.set_page_config(
 )
 
 # ===== Custom CSS =====
+# I customized the UI using CSS inside Streamlit.
 st.markdown("""
     <style>
     .main { background-color: #f0f2f6; }
@@ -64,11 +68,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ===== Title =====
+# App heading
 st.markdown('<div class="title">🤖 ZENDS AI Customer Support</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Powered by DistilBERT + RAG</div>', unsafe_allow_html=True)
 st.markdown("---")
 
 # ===== Load Model =====
+# I used caching to improve performance by avoiding repeated model loading.
 @st.cache_resource
 def load_model():
     model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
@@ -77,29 +83,33 @@ def load_model():
         le = pickle.load(f)
     return model, tokenizer, le
 
+# Initialize Model
 model, tokenizer, le = load_model()
 
 # ===== Chat History =====
+# I used session state to maintain chat history.
 if "history" not in st.session_state:
     st.session_state.history = []
 
 # ===== Input =====
+# Input + button
 query = st.text_input("💬 Type your query here:", placeholder="e.g. My internet is not working...")
 submit = st.button("Send 🚀")
 
 if submit and query.strip() != "":
-    # Intent
-    inputs = tokenizer(query, return_tensors="pt", truncation=True, padding=True)
+    # Intent Prediction
+    # I used DistilBERT to predict the intent of the query.
+    inputs = tokenizer(query, return_tensors="pt", truncation=True, padding=True) # Query → tokens
     with torch.no_grad():
-        outputs = model(**inputs)
+        outputs = model(**inputs) # Prediction
     pred = outputs.logits.argmax().item()
-    intent = le.inverse_transform([pred])[0]
+    intent = le.inverse_transform([pred])[0] #Number → intent label
 
     # Sentiment
-    sentiment = analyze_sentiment(query)
+    sentiment = analyze_sentiment(query) # detect the emotion 
 
     # Response
-    response = generate_response(query)
+    response = generate_response(query) # Generate response using RAG + LLM
 
     # Save to history
     st.session_state.history.append({
@@ -110,9 +120,10 @@ if submit and query.strip() != "":
     })
 
 # ===== Show Chat History =====
-if st.session_state.history:
+# I displayed intent and sentiment along with the response for better user understanding.
+if st.session_state.history:  # If chats exist
     st.markdown("### 💬 Conversation History")
-    for chat in reversed(st.session_state.history):
+    for chat in reversed(st.session_state.history): # Latest first show 
 
         # Sentiment color
         sentiment_color = "#FF5722" if chat['sentiment'] == "angry" else "#4CAF50" if chat['sentiment'] == "happy" else "#2196F3"
@@ -131,6 +142,7 @@ if st.session_state.history:
         """, unsafe_allow_html=True)
 
     # Clear button
+    # Reset chat history when clicked
     if st.button("🗑️ Clear History"):
         st.session_state.history = []
         st.rerun()

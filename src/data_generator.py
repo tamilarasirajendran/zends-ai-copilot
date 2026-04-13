@@ -1,8 +1,13 @@
+# This script generates a synthetic dataset with labeled intents and 
+# sentiments for training the model.
+
 import pandas as pd
 import random
 
+# These intents represent different types of customer queries.
 intents = ["billing", "refund", "technical", "complaint", "product"]
 
+#I used templates to generate multiple variations of user queries
 templates = {
     "billing": [
         "Why is my bill so high for {product}?",
@@ -36,6 +41,7 @@ templates = {
     ]
 }
 
+#I injected product names into templates to make the dataset more realistic.
 products = [
     "5G mobile plan",
     "fiber broadband",
@@ -43,14 +49,14 @@ products = [
     "IoT device",
     "enterprise network"
 ]
-
+# Sentiment is assigned based on intent to simulate real customer emotions.
 def assign_sentiment(intent):
     if intent in ["complaint", "refund"]:
-        return random.choice(["angry", "neutral"])
+        return random.choice(["angry", "neutral"]) #Complaint/refund → negative
     elif intent == "billing":
-        return random.choice(["neutral", "angry"])
+        return random.choice(["neutral", "angry"]) #Billing → mixed
     else:
-        return random.choice(["happy", "neutral"])
+        return random.choice(["happy", "neutral"]) #Product/technical → positive
 
 def generate_dataset(n_samples=20000):
     data = []
