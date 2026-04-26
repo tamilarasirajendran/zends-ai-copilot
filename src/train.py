@@ -97,7 +97,7 @@ def compute_metrics(eval_pred):
 # I configured training parameters like epochs, batch size, and evaluation strategy.
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=2,  # 🔥 faster for demo
+    num_train_epochs=2,  # faster for demo
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
     evaluation_strategy="epoch",
