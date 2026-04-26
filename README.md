@@ -107,6 +107,16 @@ streamlit run app.py
 ```
 
 ---
+## 📸 Screenshots
+
+### Refund Query
+![Refund](assets/refund.png)
+
+### Billing Query
+![Billing](assets/billing.png)
+
+### Technical Query
+![Technical](assets/technical.png)
 
 ## 💡 Features
 
