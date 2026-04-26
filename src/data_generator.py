@@ -3,8 +3,11 @@
 
 import pandas as pd
 import random
+import os   
 
-# These intents represent different types of customer queries.
+os.makedirs("data", exist_ok=True)
+
+# Intents represent the purpose of user queries.
 intents = ["billing", "refund", "technical", "complaint", "product"]
 
 #I used templates to generate multiple variations of user queries
@@ -49,14 +52,14 @@ products = [
     "IoT device",
     "enterprise network"
 ]
-# Sentiment is assigned based on intent to simulate real customer emotions.
+# Sentiment is assigned based on intent to mimic real user emotions.
 def assign_sentiment(intent):
     if intent in ["complaint", "refund"]:
-        return random.choice(["angry", "neutral"]) #Complaint/refund → negative
+        return random.choice(["angry", "neutral"])
     elif intent == "billing":
-        return random.choice(["neutral", "angry"]) #Billing → mixed
+        return random.choice(["neutral", "angry"])
     else:
-        return random.choice(["happy", "neutral"]) #Product/technical → positive
+        return random.choice(["happy", "neutral"])
 
 def generate_dataset(n_samples=20000):
     data = []
@@ -64,16 +67,19 @@ def generate_dataset(n_samples=20000):
         intent = random.choice(intents)
         template = random.choice(templates[intent])
         product = random.choice(products)
+
         text = template.format(product=product)
-        sentiment = assign_sentiment(intent)
+
         data.append({
             "text": text,
             "intent": intent,
-            "sentiment": sentiment
+            "sentiment": assign_sentiment(intent),
+            "product": product   # 🔥 important
         })
+
     return pd.DataFrame(data)
 
-if __name__ == "__main__":
-    df = generate_dataset(20000)
-    df.to_csv("data/zends_dataset_v2.csv", index=False)
-    print("✅ Dataset saved to data/zends_dataset_v2.csv")
+df = generate_dataset(20000)
+df.to_csv("data/zends_dataset_v2.csv", index=False)
+
+print("Dataset Ready")
