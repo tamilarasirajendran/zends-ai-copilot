@@ -95,18 +95,31 @@ if st.button("Send 🚀") and query.strip() != "":
     })
 
 # ------------------------------
-# 💬 Display Chat (CLEAN UI)
+# 💬 Display Chat (UPDATED 🔥)
 # ------------------------------
 if st.session_state.history:
 
     for chat in st.session_state.history:
+
+        # 🔥 Mapping (IMPORTANT)
+        if chat["sentiment"] == "angry":
+            sentiment_label = "Negative"
+            emotion_label = "😡 Angry"
+        elif chat["sentiment"] == "happy":
+            sentiment_label = "Positive"
+            emotion_label = "😊 Happy"
+        else:
+            sentiment_label = "Neutral"
+            emotion_label = "😐 Neutral"
 
         with st.chat_message("user"):
             st.write(chat["query"])
 
         with st.chat_message("assistant"):
             st.write(chat["response"])
-            st.caption(f"🎯 Intent: {chat['intent'].capitalize()}   |   😡 Sentiment: {chat['sentiment'].capitalize()}")
+            st.caption(
+                f"🎯 Intent: {chat['intent'].capitalize()}   |   {emotion_label}   |   Sentiment: {sentiment_label}"
+            )
 
 # ------------------------------
 # 🧹 Clear Chat
